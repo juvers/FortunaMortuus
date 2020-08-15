@@ -13,6 +13,11 @@ app.get('/', function(req, res) {
     res.render('index');
 });
 
+
+app.get('/sw.js', function(req, res) {
+    res.render('sw.js');
+});
+
 // for parsing application/json
 app.use(bodyParser.json());
 
