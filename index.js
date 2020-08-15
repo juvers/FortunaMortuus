@@ -3,6 +3,9 @@ const bodyParser = require('body-parser');
 const multer = require('multer');
 const upload = multer();
 const app = express();
+const webPush = require('web-push');
+const path = require('path');
+require('dotenv').config({ path: 'variables.env' });
 
 
 
