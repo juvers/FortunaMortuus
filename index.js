@@ -4,12 +4,14 @@ const multer = require('multer');
 const upload = multer();
 const app = express();
 
-app.get('/', function(req, res) {
-    res.render('form');
-});
+
 
 app.set('view engine', 'pug');
 app.set('views', './views');
+
+app.get('/', function(req, res) {
+    res.render('index');
+});
 
 // for parsing application/json
 app.use(bodyParser.json());
@@ -20,10 +22,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // for parsing multipart/form-data
 app.use(upload.array());
-app.use(express.static('public'));
+app.use(express.static(__dirname + '/public'));
 
 app.post('/', function(req, res) {
     console.log(req.body);
-    res.send("recieved your request!");
+    res.send('"recieved your request!"');
 });
 app.listen(3000);
