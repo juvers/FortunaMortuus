@@ -28,6 +28,9 @@ app.use(express.static(__dirname + '/public'));
 const publicVapidKey = process.env.PUBLIC_VAPID_KEY;
 const privateVapidKey = process.env.PRIVATE_VAPID_KEY;
 
+webPush.setVapidDetails('mailto:judekuti@gmail.com', publicVapidKey, privateVapidKey);
+
+
 app.get('/', function(req, res) {
     res.render('index');
 });
@@ -36,4 +39,19 @@ app.post('/', function(req, res) {
     console.log(req.body);
     res.send('"recieved your request!"');
 });
+
+
+app.post('/subscribe', (req, res) => {
+    const subscription = req.body
+
+    res.status(201).json({});
+
+    const payload = JSON.stringify({
+        title: 'Push notifications with Service Workers',
+    });
+
+    webPush.sendNotification(subscription, payload)
+        .catch(error => console.error(error));
+});
+
 app.listen(3000);
