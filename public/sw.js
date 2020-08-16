@@ -16,9 +16,28 @@ self.addEventListener('install', function(event) {
     );
 });
 self.addEventListener('fetch', function(event) {
-    console.log('Testing fetch in service worker: ',
+    console.log('I am a request with url: ',
         event.request.clone().url)
-
+    if (event.request.clone().method === 'GET') {
+        event.respondWith(
+            // inspect caches in the browser to check if request exists
+            caches.match(event.request.clone())
+            .then(function(response) {
+                if (response) {
+                    //return the response stored in browser
+                    return response;
+                }
+                // no match in cache, use the network instead
+                return fetch(event.request.clone());
+            })
+        );
+    } else if (event.request.clone().method === 'POST') {
+        // attempt to send request normally
+        event.respondWith(fetch(event.request.clone()).catch(function(error) {
+            // only save post requests in browser, if an error occurs
+            savePostRequests(event.request.clone().url, form_data)
+        }))
+    }
 });
 
 
