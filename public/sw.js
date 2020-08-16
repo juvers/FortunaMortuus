@@ -30,3 +30,29 @@ self.addEventListener('push', event => {
     });
     console.log("Push notification works too")
 });
+
+
+
+
+function openDatabase() {
+    var indexedDBOpenRequest = indexedDB.open('offline-form',
+        IDB_VERSION)
+    indexedDBOpenRequest.onerror = function(error) {
+        // error creating db
+        console.error('IndexedDB error:', error)
+    }
+    indexedDBOpenRequest.onupgradeneeded = function() {
+            // This should only executes if there's a need to 
+            // create/update db.
+            this.result.createObjectStore('post_requests', {
+                autoIncrement: true,
+                keyPath: 'id'
+            })
+        }
+        // This will execute each time the database is opened.
+    indexedDBOpenRequest.onsuccess = function() {
+        our_db = this.result
+    }
+}
+var our_db
+openDatabase()
