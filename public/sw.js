@@ -6,7 +6,8 @@ var form_data;
 var urlsToCache = [
     '/',
     '/styles.css',
-    "https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js",
+    'https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js',
+    'https://static.pexels.com/photos/33999/pexels-photo.jpg'
 
 ];
 self.addEventListener('install', function(event) {
