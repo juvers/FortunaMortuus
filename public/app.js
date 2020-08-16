@@ -1,3 +1,27 @@
+// Offline Userabilty
+
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/sw.js').then(function(registration) {
+            console.log(registration.scope);
+        }, function(err) {
+            // registration failed :(
+            console.log('ServiceWorker registration failed: ',
+                err);
+        });
+        navigator.serviceWorker.ready.then(function(registration) {
+            console.log('Service Worker Ready')
+            return registration.sync.register('sendFormData')
+        }).then(function() {
+            console.log('sync event registered')
+        }).catch(function() {
+            // system was unable to register for a sync,
+            // this could be an OS-level restriction
+            console.log('sync registration failed')
+        });
+    });
+}
+
 $("#contact").submit(function(event) {
 
     // Stop form from submitting normally
@@ -18,9 +42,13 @@ $("#contact").submit(function(event) {
             title: title,
             message: message,
         }
-    let msg = {
+    console.log("Is data posting: ", data);
+    var msg = {
         'form_data': data
     }
+
+    console.log("Is msg right: ", msg);
+
     navigator.serviceWorker.controller.postMessage(msg)
     console.log(data);
     $.ajax({
@@ -40,6 +68,10 @@ $("#contact").submit(function(event) {
     // $('#message').append(message)
     return false
 });
+
+
+
+// Push Notifications
 
 function urlBase64ToUint8Array(base64String) {
     const padding = '='.repeat((4 - base64String.length % 4) % 4);
@@ -86,26 +118,3 @@ async function triggerPushNotification() {
 triggerPush.addEventListener('click', () => {
     triggerPushNotification().catch(error => console.error(error));
 });
-
-
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
-        navigator.serviceWorker.register('/sw.js').then(function(registration) {
-            console.log(registration.scope);
-        }, function(err) {
-            // registration failed :(
-            console.log('ServiceWorker registration failed: ',
-                err);
-        });
-        navigator.serviceWorker.ready.then(function(registration) {
-            console.log('Service Worker Ready')
-            return registration.sync.register('sendFormData')
-        }).then(function() {
-            console.log('sync event registered')
-        }).catch(function() {
-            // system was unable to register for a sync,
-            // this could be an OS-level restriction
-            console.log('sync registration failed')
-        });
-    });
-}

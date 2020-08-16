@@ -1,4 +1,8 @@
 var CACHE_NAME = 'offline-form';
+var FOLDER_NAME = 'post_requests';
+var IDB_VERSION = 4;
+var form_data;
+
 var urlsToCache = [
     '/',
     '/styles.css',
