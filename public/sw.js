@@ -1,25 +1,13 @@
-var CACHE_NAME = 'offline-form';
-var FOLDER_NAME = 'post_requests';
-var IDB_VERSION = 4;
-var form_data;
+var CACHE_NAME = 'offline-form',
+    FOLDER_NAME = 'post_requests',
+    IDB_VERSION = 4,
+    form_data, our_db, urlsToCache = [
+        '/',
+        '/styles.css',
+        'https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js',
+        'https://static.pexels.com/photos/33999/pexels-photo.jpg'
 
-var urlsToCache = [
-    '/',
-    '/styles.css',
-    'https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js',
-    'https://static.pexels.com/photos/33999/pexels-photo.jpg'
-
-];
-// self.addEventListener('install', function(event) {
-//     // install file needed offline
-//     event.waitUntil(self.skipWaiting(),
-//         caches.open(CACHE_NAME)
-//         .then(function(cache) {
-//             console.log('Opened cache and install');
-//             return cache.addAll(urlsToCache);
-//         })
-//     );
-// });
+    ];
 
 // Inclue skipWaiting to claim the page immediately
 self.addEventListener('install', event => event.waitUntil(self.skipWaiting(), caches.open(CACHE_NAME).then(cache => {
@@ -29,31 +17,6 @@ self.addEventListener('install', event => event.waitUntil(self.skipWaiting(), ca
 
 // service worker immediately claim the page
 self.addEventListener('activate', event => event.waitUntil(self.clients.claim()));
-
-// self.addEventListener('fetch', function(event) {
-//     console.log('I am a request with url: ',
-//         event.request.clone().url)
-//     if (event.request.clone().method === 'GET') {
-//         event.respondWith(
-//             // inspect caches in the browser to check if request exists
-//             caches.match(event.request.clone())
-//             .then(function(response) {
-//                 if (response) {
-//                     //return the response stored in browser
-//                     return response;
-//                 }
-//                 // no match in cache, use the network instead
-//                 return fetch(event.request.clone());
-//             })
-//         );
-//     } else if (event.request.clone().method === 'POST') {
-//         // attempt to send request normally
-//         event.respondWith(fetch(event.request.clone()).catch(function(error) {
-//             // only save post requests in browser, if an error occurs
-//             savePostRequests(event.request.clone().url, form_data)
-//         }))
-//     }
-// });
 
 self.addEventListener('fetch', event => {
     if (event.request.clone().method === 'GET') {
@@ -70,39 +33,59 @@ self.addEventListener('fetch', event => {
 
 
 
+// self.addEventListener('push', event => {
+//     const data = event.data.json();
+//     self.registration.showNotification(data.title, {
+//         body: 'Push notification works now!',
+//     });
+//     console.log("Push notification works too")
+// });
+
+
 self.addEventListener('push', event => {
     const data = event.data.json();
     self.registration.showNotification(data.title, {
-        body: 'Push notification works now!',
+        body: 'Push notification from fortune offline!!!'
     });
-    console.log("Push notification works too")
-});
+    console.log('Push notification successfully executed')
+})
 
-self.addEventListener('message', function(event) {
-    console.log('form data', event.data)
+// self.addEventListener('message', function(event) {
+//     console.log('form data', event.data)
+//     if (event.data.hasOwnProperty('form_data')) {
+//         // receives form data from app.js upon submission
+//         form_data = event.data.form_data
+//     }
+// });
+
+self.addEventListener('message', event => {
     if (event.data.hasOwnProperty('form_data')) {
         // receives form data from app.js upon submission
         form_data = event.data.form_data
-    }
-});
+    };
+    console.log('Successfully received data from my other script');
+})
 
-// self.addEventListener('message', function(event) {
-//     event.ports[0].postMessage(event.data);
+
+// self.addEventListener('sync', function(event) {
+//     console.log('now online')
+//     if (event.tag === 'sendFormData') { // event.tag name checked
+//         // here must be the same as the one used while registering
+//         // sync
+//         event.waitUntil(
+//             // Send our POST request to the server, now that the user is
+//             // online
+//             sendPostToServer()
+//         )
+//     }
 // });
 
-self.addEventListener('sync', function(event) {
-    console.log('now online')
-    if (event.tag === 'sendFormData') { // event.tag name checked
-        // here must be the same as the one used while registering
-        // sync
-        event.waitUntil(
-            // Send our POST request to the server, now that the user is
-            // online
-            sendPostToServer()
-        )
-    }
-});
-
+self.addEventListener('sync', event => {
+    if (event.tag === 'sendFormData') {
+        event.waitUntil(sendPostToServer())
+    };
+    console.log('Client back online');
+})
 
 function getObjectStore(storeName, mode) {
     // retrieve our object store
@@ -124,7 +107,7 @@ function savePostRequests(url, payload) {
     }
 }
 
-function openDatabase() {
+(function openDatabase() {
     var indexedDBOpenRequest = indexedDB.open('offline-form',
         IDB_VERSION)
     indexedDBOpenRequest.onerror = function(error) {
@@ -143,9 +126,9 @@ function openDatabase() {
     indexedDBOpenRequest.onsuccess = function() {
         our_db = this.result
     }
-}
-var our_db
-openDatabase();
+})()
+
+// openDatabase();
 
 
 function sendPostToServer() {
