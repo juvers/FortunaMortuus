@@ -59,7 +59,25 @@ self.addEventListener('message', function(event) {
 })
 
 
+function getObjectStore(storeName, mode) {
+    // retrieve our object store
+    return our_db.transaction(storeName, mode).objectStore(storeName)
+}
 
+function savePostRequests(url, payload) {
+    // get object_store and save our payload inside it
+    var request = getObjectStore(FOLDER_NAME, 'readwrite').add({
+        url: url,
+        payload: payload,
+        method: 'POST'
+    })
+    request.onsuccess = function(event) {
+        console.log('a new post request has been added to indexedb')
+    }
+    request.onerror = function(error) {
+        console.error(error)
+    }
+}
 
 function openDatabase() {
     var indexedDBOpenRequest = indexedDB.open('offline-form',
