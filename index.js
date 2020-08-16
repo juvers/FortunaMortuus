@@ -10,7 +10,7 @@ require('dotenv').config({ path: 'variables.env' });
 
 
 app.set('view engine', 'pug');
-app.set('views', './views');
+app.set('views', './public/views');
 
 
 // for parsing application/json
@@ -54,7 +54,7 @@ app.post('/subscribe', (req, res) => {
         .catch(error => console.error(error));
 });
 
-app.set('port', process.env.PORT || 5000);
+app.set('port', process.env.PORT || 4000);
 const server = app.listen(app.get('port'), () => {
     console.log(`Express running → PORT ${server.address().port}`);
 });

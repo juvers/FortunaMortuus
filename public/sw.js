@@ -10,7 +10,7 @@ self.addEventListener('install', function(event) {
     event.waitUntil(
         caches.open(CACHE_NAME)
         .then(function(cache) {
-            console.log('Opened cache');
+            console.log('Opened cache and install');
             return cache.addAll(urlsToCache);
         })
     );
@@ -25,8 +25,8 @@ self.addEventListener('fetch', function(event) {
 
 self.addEventListener('push', event => {
     const data = event.data.json();
-
     self.registration.showNotification(data.title, {
         body: 'Push notification works now!',
     });
+    console.log("Push notification works too")
 });
