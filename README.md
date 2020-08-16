@@ -26,5 +26,12 @@
 6. Create indexedb database and create object store for the db( as a db can contain several object stores).
 7. Use `navigator.serviceworker.controller.postMessage(msg)` to transport our form data to the service worker
 8. Listen for `message` event in the service worker
-9. Save form data in indexedb and ensure post request is intercepted to prevent errors when offline
-10. Get saved payload, request url and method type from the object store using `getObjectStore`
+9. Save form data in indexedb and ensure post request is intercepted to prevent errors when offline. This is best achieved as we listen for the `fetch` event.
+10. Get saved payload, request url and method type from the object store using `getObjectStore`.
+11. Shut down server and go offline on client to simulate total network failure and attempt a post event on the client. 
+12. Request a background sync by registering the request in the helper script and listen for the sync event in service worker script. 
+13. The sync event in the service worker script is triggered when the browser comes back online.
+14. Retrieve all saved requests from indexedb using cursors and save them into an array.
+15. Iterate through the array of saved requests and retrieve that particular request's url, payload and method. 
+16. Usign fetch API send the request to the server. Its good practice to delete the particular saved request sent from the indexedb if the response is a 200 so not to send the post multiple times. If the reponse is a 500 server error retain saved request in the indexedb to retry.
+17. Good practice as well to ensure th update on reload in the service worker application is checked. 
