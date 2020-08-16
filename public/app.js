@@ -1,3 +1,39 @@
+$("#contact").submit(function(event) {
+
+    // Stop form from submitting normally
+    event.preventDefault();
+
+    // Get some values from elements on the page:
+    var $form = $(this),
+        full_name = $form.find("input[name='name']").val(),
+        email = $form.find("input[name='email']").val(),
+        phone = $form.find("input[name='phone']").val(),
+        title = $form.find("input[name='title']").val(),
+        message = $form.find("input[name='message']").val(),
+
+        data = {
+            full_name: full_name,
+            email: email,
+            phone: phone,
+            title: title,
+            message: message,
+        }
+    console.log(data);
+    $.ajax({
+        type: "POST",
+        url: '/submit',
+        contentType: 'application/json',
+        data: JSON.stringify(data),
+        success: function() {
+            console.log('data sent to server successfully')
+        },
+        dataType: 'json'
+    });
+    // message = 'Your data has been sent to the server'
+    // $('#message').append(message)
+    return false
+});
+
 function urlBase64ToUint8Array(base64String) {
     const padding = '='.repeat((4 - base64String.length % 4) % 4);
     const base64 = (base64String + padding)
