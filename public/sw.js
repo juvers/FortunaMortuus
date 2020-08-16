@@ -10,40 +10,63 @@ var urlsToCache = [
     'https://static.pexels.com/photos/33999/pexels-photo.jpg'
 
 ];
-self.addEventListener('install', function(event) {
-    // install file needed offline
-    event.waitUntil(
-        caches.open(CACHE_NAME)
-        .then(function(cache) {
-            console.log('Opened cache and install');
-            return cache.addAll(urlsToCache);
-        })
-    );
-});
-self.addEventListener('fetch', function(event) {
-    console.log('I am a request with url: ',
-        event.request.clone().url)
+// self.addEventListener('install', function(event) {
+//     // install file needed offline
+//     event.waitUntil(self.skipWaiting(),
+//         caches.open(CACHE_NAME)
+//         .then(function(cache) {
+//             console.log('Opened cache and install');
+//             return cache.addAll(urlsToCache);
+//         })
+//     );
+// });
+
+// Inclue skipWaiting to claim the page immediately
+self.addEventListener('install', event => event.waitUntil(self.skipWaiting(), caches.open(CACHE_NAME).then(cache => {
+    console.log('Cache opened and installation successful');
+})))
+
+
+// service worker immediately claim the page
+self.addEventListener('activate', event => event.waitUntil(self.clients.claim()));
+
+// self.addEventListener('fetch', function(event) {
+//     console.log('I am a request with url: ',
+//         event.request.clone().url)
+//     if (event.request.clone().method === 'GET') {
+//         event.respondWith(
+//             // inspect caches in the browser to check if request exists
+//             caches.match(event.request.clone())
+//             .then(function(response) {
+//                 if (response) {
+//                     //return the response stored in browser
+//                     return response;
+//                 }
+//                 // no match in cache, use the network instead
+//                 return fetch(event.request.clone());
+//             })
+//         );
+//     } else if (event.request.clone().method === 'POST') {
+//         // attempt to send request normally
+//         event.respondWith(fetch(event.request.clone()).catch(function(error) {
+//             // only save post requests in browser, if an error occurs
+//             savePostRequests(event.request.clone().url, form_data)
+//         }))
+//     }
+// });
+
+self.addEventListener('fetch', event => {
     if (event.request.clone().method === 'GET') {
-        event.respondWith(
-            // inspect caches in the browser to check if request exists
-            caches.match(event.request.clone())
-            .then(function(response) {
-                if (response) {
-                    //return the response stored in browser
-                    return response;
-                }
-                // no match in cache, use the network instead
-                return fetch(event.request.clone());
-            })
-        );
-    } else if (event.request.clone().method === 'POST') {
-        // attempt to send request normally
-        event.respondWith(fetch(event.request.clone()).catch(function(error) {
-            // only save post requests in browser, if an error occurs
-            savePostRequests(event.request.clone().url, form_data)
+        event.respondWith(caches.match(event.request.clone()).then(response => {
+            if (response) {
+                return response
+            }
+            return fetch(event.request.clone());
         }))
+    } else if (event.request.clone().method === 'POST') {
+        event.respondWith(fetch(event.request.clone()).catch(error => savePostRequests(event.request.clone().url, form_data)))
     }
-});
+})
 
 
 
@@ -58,10 +81,14 @@ self.addEventListener('push', event => {
 self.addEventListener('message', function(event) {
     console.log('form data', event.data)
     if (event.data.hasOwnProperty('form_data')) {
-        // receives form data from script.js upon submission
+        // receives form data from app.js upon submission
         form_data = event.data.form_data
     }
 });
+
+// self.addEventListener('message', function(event) {
+//     event.ports[0].postMessage(event.data);
+// });
 
 self.addEventListener('sync', function(event) {
     console.log('now online')

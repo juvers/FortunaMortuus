@@ -35,9 +35,10 @@ app.get('/', function(req, res) {
     res.render('index');
 });
 
-app.post('/submit', function(req, res) {
+app.post('/', function(req, res) {
     console.log(req.body);
-    res.send('"recieved your request!"');
+    res.send('"received your request!"');
+    // res.render('message');
 });
 
 

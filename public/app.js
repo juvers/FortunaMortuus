@@ -4,11 +4,18 @@ if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
         navigator.serviceWorker.register('/sw.js').then(function(registration) {
             console.log(registration.scope);
+            // if (registration.installing) {
+            //     registration.installing.postMessage("Howdy from your installing page.");
+            // }
         }, function(err) {
             // registration failed :(
             console.log('ServiceWorker registration failed: ',
                 err);
         });
+        // navigator.serviceWorker.onmessage = function(e) {
+        //     // messages from service worker.
+        //     console.log('e.data', e.data);
+        // };
         navigator.serviceWorker.ready.then(function(registration) {
             console.log('Service Worker Ready')
             return registration.sync.register('sendFormData')
@@ -50,18 +57,16 @@ $("#contact").submit(function(event) {
     console.log("Is msg right: ", msg);
 
     navigator.serviceWorker.controller.postMessage(msg)
+
     console.log(data);
     $.ajax({
         type: "POST",
-        url: '/submit',
+        url: '/',
         contentType: 'application/json',
         dataType: 'json',
         data: JSON.stringify(data),
         success: function() {
             console.log('data sent to server successfully');
-        },
-        error: function() {
-            console.log('Error sending data to the server');
         }
     });
     // message = 'Your data has been sent to the server'
