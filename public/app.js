@@ -18,6 +18,10 @@ $("#contact").submit(function(event) {
             title: title,
             message: message,
         }
+    let msg = {
+        'form_data': data
+    }
+    navigator.serviceWorker.controller.postMessage(msg)
     console.log(data);
     $.ajax({
         type: "POST",
