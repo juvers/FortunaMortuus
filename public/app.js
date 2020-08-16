@@ -9,7 +9,7 @@ $("#contact").submit(function(event) {
         email = $form.find("input[name='email']").val(),
         phone = $form.find("input[name='phone']").val(),
         title = $form.find("input[name='title']").val(),
-        message = $form.find("input[name='message']").val(),
+        message = $form.find("textarea[name='message']").val(),
 
         data = {
             full_name: full_name,
@@ -23,11 +23,14 @@ $("#contact").submit(function(event) {
         type: "POST",
         url: '/submit',
         contentType: 'application/json',
+        dataType: 'json',
         data: JSON.stringify(data),
         success: function() {
-            console.log('data sent to server successfully')
+            console.log('data sent to server successfully');
         },
-        dataType: 'json'
+        error: function() {
+            console.log('Error sending data to the server');
+        }
     });
     // message = 'Your data has been sent to the server'
     // $('#message').append(message)
