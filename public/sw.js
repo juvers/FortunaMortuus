@@ -56,7 +56,20 @@ self.addEventListener('message', function(event) {
         // receives form data from script.js upon submission
         form_data = event.data.form_data
     }
-})
+});
+
+self.addEventListener('sync', function(event) {
+    console.log('now online')
+    if (event.tag === 'sendFormData') { // event.tag name checked
+        // here must be the same as the one used while registering
+        // sync
+        event.waitUntil(
+            // Send our POST request to the server, now that the user is
+            // online
+            sendPostToServer()
+        )
+    }
+});
 
 
 function getObjectStore(storeName, mode) {
