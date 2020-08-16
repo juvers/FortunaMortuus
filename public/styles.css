@@ -8,7 +8,7 @@ body {
     color: grey;
     overflow: auto;
     width: 100%;
-    background: url('https://static.pexels.com/photos/33999/pexels-photo.jpg') no-repeat center;
+    background: url('./img/redphone.jpg') no-repeat center;
     background-size: cover;
     height: 100vh;
 }
@@ -94,6 +94,23 @@ fieldset {
     margin: 0 0 5px;
     padding: 10px;
     font-size: 15px;
+}
+
+.trigger-push {
+    cursor: pointer;
+    width: 100%;
+    /* background: #fe524b; */
+    color: #000;
+    margin: 0 0 5px;
+    padding: 10px;
+    font-size: 15px;
+}
+
+.trigger-push:hover {
+    background: #eee;
+    -webkit-transition: background 0.3s ease-in-out;
+    -moz-transition: background 0.3s ease-in-out;
+    transition: background-color 0.3s ease-in-out;
 }
 
 #contact button[type="submit"]:hover {

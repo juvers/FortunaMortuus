@@ -3,10 +3,10 @@
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
         navigator.serviceWorker.register('/sw.js').then(function(registration) {
-            console.log(registration.scope);
-            // if (registration.installing) {
-            //     registration.installing.postMessage("Howdy from your installing page.");
-            // }
+            console.log("Registration scope: ", registration.scope);
+            if (registration.installing) {
+                registration.installing.postMessage("Howdy from your installing page.");
+            }
         }, function(err) {
             // registration failed :(
             console.log('ServiceWorker registration failed: ',
@@ -49,16 +49,12 @@ $("#contact").submit(function(event) {
             title: title,
             message: message,
         }
-    console.log("Is data posting: ", data);
     var msg = {
         'form_data': data
     }
 
-    console.log("Is msg right: ", msg);
-
+    // Key to connect the two scripts viz app.js and switch.js
     navigator.serviceWorker.controller.postMessage(msg)
-
-    console.log(data);
     $.ajax({
         type: "POST",
         url: '/',

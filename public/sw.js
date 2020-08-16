@@ -4,9 +4,10 @@ var CACHE_NAME = 'offline-form',
     form_data, our_db, urlsToCache = [
         '/',
         '/styles.css',
+        '/app.js',
+        '/img/',
+        '/views/',
         'https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js',
-        'https://static.pexels.com/photos/33999/pexels-photo.jpg'
-
     ];
 
 // Inclue skipWaiting to claim the page immediately
@@ -107,7 +108,7 @@ function savePostRequests(url, payload) {
     }
 }
 
-(function openDatabase() {
+function openDatabase() {
     var indexedDBOpenRequest = indexedDB.open('offline-form',
         IDB_VERSION)
     indexedDBOpenRequest.onerror = function(error) {
@@ -126,9 +127,9 @@ function savePostRequests(url, payload) {
     indexedDBOpenRequest.onsuccess = function() {
         our_db = this.result
     }
-})()
+}
 
-// openDatabase();
+openDatabase();
 
 
 function sendPostToServer() {
