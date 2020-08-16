@@ -16,11 +16,14 @@ head
     fieldset
       input(placeholder='Your Phone Number' name='telephone' type='tel' tabindex='3' required='')
     fieldset
-      input(placeholder='Your Message Title' name='itle' type='text' tabindex='4' required='')
+      input(placeholder='Your Message Title' name='title' type='text' tabindex='4' required='')
     fieldset
       textarea(placeholder='Type your Message Here....' name='message' tabindex='5' required='')
     fieldset
       button#contact-submit(name='submit' type='submit' data-submit='...Sending') Submit
+    fieldset
+      button.trigger-push Trigger Push Notification
 
-
+//- .buttons
+//-   button.trigger-push Trigger Push Notification
 script(src='/app.js')
