@@ -12,14 +12,6 @@ require('dotenv').config({ path: 'variables.env' });
 app.set('view engine', 'pug');
 app.set('views', './views');
 
-app.get('/', function(req, res) {
-    res.render('index');
-});
-
-
-app.get('/sw.js', function(req, res) {
-    res.render('sw.js');
-});
 
 // for parsing application/json
 app.use(bodyParser.json());
@@ -31,6 +23,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // for parsing multipart/form-data
 app.use(upload.array());
 app.use(express.static(__dirname + '/public'));
+
+
+const publicVapidKey = process.env.PUBLIC_VAPID_KEY;
+const privateVapidKey = process.env.PRIVATE_VAPID_KEY;
+
+app.get('/', function(req, res) {
+    res.render('index');
+});
 
 app.post('/', function(req, res) {
     console.log(req.body);
