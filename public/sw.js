@@ -31,6 +31,14 @@ self.addEventListener('push', event => {
     console.log("Push notification works too")
 });
 
+self.addEventListener('message', function(event) {
+    console.log('form data', event.data)
+    if (event.data.hasOwnProperty('form_data')) {
+        // receives form data from script.js upon submission
+        form_data = event.data.form_data
+    }
+})
+
 
 
 
